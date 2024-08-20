@@ -1,0 +1,7 @@
+{
+    "extends": ["next", "plugin:react/recommended"],
+    "plugins": ["react"],
+    "rules": {
+      "react/prop-types": "error"
+    }
+  }
