@@ -1,18 +1,17 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Cookies from 'js-cookie'
 import { IconButton, Tooltip } from '@mui/material'
-import { Brightness4Outlined, Brightness5Outlined } from '@mui/icons-material'
+import { Brightness4Outlined, Brightness5Outlined, Close } from '@mui/icons-material'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import useColorMode from '../../hooks/useColorMode'
 
 const ColorModeSwitch = () => {
-    const isAuto = Cookies.get('color-mode-auto') ==='true'
-    const { setColorMode,colorMode } = useColorMode()
+    const { setColorMode,colorMode,isAutoMode } = useColorMode()
 
     const modeTree = {
-        dark: 'light',
-        light: isAuto ? 'dark' :'auto',
+        light: 'dark',
+        dark: isAutoMode ? 'light' :'auto',
     }
 
     const TooltipTree={
@@ -25,9 +24,9 @@ const ColorModeSwitch = () => {
     }
 
     return (
-        <Tooltip title={isAuto ? 'Modo automático' : TooltipTree[colorMode]}>
+        <Tooltip title={isAutoMode ? 'Modo automático' : TooltipTree[colorMode]}>
         <IconButton onClick={handleChangeColorMode} className='h-max'>
-            {isAuto ? <AutoAwesomeOutlinedIcon /> : (colorMode === 'light' ? <Brightness5Outlined /> : <Brightness4Outlined /> )}
+            {isAutoMode ? <AutoAwesomeOutlinedIcon /> : (colorMode === 'light' ? <Brightness5Outlined /> : <Brightness4Outlined /> )}
         </IconButton>
             </Tooltip>
     )

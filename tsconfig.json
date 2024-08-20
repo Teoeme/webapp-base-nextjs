@@ -28,8 +28,11 @@
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
+    ".next/types/**/*.js",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "**/*.jsx",
+    "**/*.js"
 , "src/app/api/mailer/sendgrid.js"  ],
   "exclude": [
     "node_modules"

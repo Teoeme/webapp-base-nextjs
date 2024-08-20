@@ -1,9 +1,12 @@
 import React from 'react'
+import GeneralNavbar from '../components/Navbars/GeneralNavbar'
 
 
 const layout = ({children}) => {
   return (
-    <div>{children}</div>
+    <div>
+      <GeneralNavbar />
+      {children}</div>
   )
 }
 

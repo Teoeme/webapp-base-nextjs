@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 const useColorMode = () => {
   const [colorMode, setColorModeState] = useState('light');
+  const [isAutoMode, setIsAutoMode] = useState(false);
   const router=useRouter()
   // Función para determinar el modo basado en la hora
   const getAutoColorMode = () => {
@@ -15,6 +16,7 @@ const useColorMode = () => {
   const getColorMode = useCallback(() => {
     const storedMode = Cookies.get('color-mode');
     const isAuto = Cookies.get('color-mode-auto')==='true';
+    setIsAutoMode(isAuto)
     Cookies.set('client-time', new Date().toISOString(), { expires: 7 }); 
 
     if (storedMode) {
@@ -23,31 +25,32 @@ const useColorMode = () => {
       const autoMode = getAutoColorMode();
       Cookies.set('color-mode', autoMode, { expires: 7 }); // Establece la cookie con una caducidad de 7 días
       Cookies.set('color-mode-auto', true, { expires: 7 }); // Establece la cookie con una caducidad de 7 días
+    setIsAutoMode(true)
+
       return autoMode;
     }
   }, []);
 
   // Función para cambiar el modo de color
   const setColorMode = useCallback((mode) => {
-    console.log(mode)
     if(mode==='auto'){
       Cookies.set('color-mode-auto', true, { expires: 7 }); 
+    setIsAutoMode(true)
+
     }else{
       Cookies.set('color-mode-auto', false, { expires: 7 }); 
-      console.log('APAGANDO AUTO MODE')
+    setIsAutoMode(false)
     }
 
     const newMode=mode === 'auto' ? getAutoColorMode() : mode
     Cookies.set('client-time', new Date().toISOString(), { expires: 7 }); 
     Cookies.set('color-mode', newMode, { expires: 7 }); 
     setColorModeState(newMode);
-    console.log('cambiando color mode a ',newMode)
     router.refresh()
   }, []);
 
   // Función para alternar entre los modos light y dark
   const toggleColorMode = useCallback(() => {
-    console.log('toggle color mode')
     const newMode = colorMode === 'light' ? 'dark' : 'light';
     setColorMode(newMode);
   }, [colorMode, setColorMode]);
@@ -56,11 +59,10 @@ const useColorMode = () => {
   useEffect(() => {
     const initialMode = getColorMode();
     Cookies.set('color-mode', initialMode, { expires: 7 }); 
-
     setColorModeState(initialMode);
   }, [getColorMode]);
 
-  return { colorMode, getColorMode, toggleColorMode, setColorMode };
+  return { colorMode, getColorMode, toggleColorMode, setColorMode,isAutoMode };
 };
 
 export default useColorMode;
