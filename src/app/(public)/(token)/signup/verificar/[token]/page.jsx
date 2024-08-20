@@ -43,7 +43,7 @@ const page = async ({ params, searchParams }) => {
       return
     }
     const hashedPass = await hashPassword(Password)
-    const defaultImage=[{asset_id:'',url:'',extension:'webp',resource_type:'image',size:0}]
+    const defaultImage=[{asset_id:'0',url:'/',extension:'webp',resource_type:'image',size:0}]
    
     const user = new UserModel({ ...verif.payload, Name, Password: hashedPass,Image:defaultImage })
     await user.save()

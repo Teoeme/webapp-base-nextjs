@@ -1,4 +1,3 @@
-import { group } from "console"
 
 export const configurations = [
     {

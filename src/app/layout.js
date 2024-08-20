@@ -22,19 +22,19 @@ export default async function RootLayout({ children }) {
     return(palette.value)
 }
 
-const palette=await loadPalette()
+const palette=await loadPalette() || {}
 const colorMode=getColorMode()
 
   return (
     <html lang="en">
       <body className={`${inter.className} ${urbanist.variable} bg-foreground font-main text-copy`}>
-       <style>{`
+       {palette && <style>{`
        :root {
-        ${ Object.keys(palette?.[colorMode]).map(colorName => {
+        ${ Object?.keys(palette?.[colorMode]).map(colorName => {
          return `--color-${colorName}:${palette?.[colorMode][colorName]}`
         }).join(';')}
       }
-        `}</style>
+        `}</style>}
       <Suspense fallback={<div>Loading...</div>}>
       <Google />
         <Providers palette={palette} colorMode={colorMode} >

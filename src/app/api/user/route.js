@@ -23,10 +23,11 @@ export async function POST(req) {
 
         if(!emailValidation){
             let Password = await hashPassword(body?.Password)
-            const defaultImage=[{asset_id:'',url:'',extension:'webp',resource_type:'image',size:0}]
+            const defaultImage=[{asset_id:'0',url:'/',extension:'webp',resource_type:'image',size:0}]
             if(!body?.Image){
                 body.Image=defaultImage
             }
+            console.log(body)
             let newUser = await new UserModel({ ...body, Password })
             await newUser.save()
             return nextResponseCreator(200, 'Usuario creado')

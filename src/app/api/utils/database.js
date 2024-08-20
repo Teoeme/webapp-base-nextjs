@@ -43,7 +43,7 @@ for (let idx = 0; idx < configurations.length; idx++) {
 
 for (let idx = 0; idx < users.length; idx++) {
   const usr = users[idx];
-  if(!await UserModel.exists({Name:usr.Name})){
+  if(!await UserModel.exists({Email:usr.Email})){
     let newUser=new UserModel(usr)
     await newUser.save()
   }

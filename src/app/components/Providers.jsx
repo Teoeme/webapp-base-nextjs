@@ -4,10 +4,12 @@ import { SessionProvider } from 'next-auth/react'
 import React from 'react'
 import { ConfirmProvider } from 'material-ui-confirm';
 import { SnackbarProvider } from 'notistack';
+import useColorMode from '../hooks/useColorMode';
 
 
 const Providers = ({children,palette,colorMode}) => {
 let theme=createTheme()
+const {}=useColorMode()
 
   if(palette){
 theme=createTheme({
