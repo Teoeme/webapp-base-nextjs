@@ -3,7 +3,7 @@ import "./globals.css";
 import Providers from "./components/Providers";
 import { Suspense } from "react";
 import { getColorMode} from "../app/api/utils/colormode";
-
+import Google from './components/Google/Google'
 const inter = Inter({ subsets: ["latin"] });
 const urbanist = Urbanist({ subsets: ["latin"],variable:'--font-main' });
 
@@ -25,8 +25,6 @@ export default async function RootLayout({ children }) {
 const palette=await loadPalette()
 const colorMode=getColorMode()
 
-
-
   return (
     <html lang="en">
       <body className={`${inter.className} ${urbanist.variable} bg-foreground font-main text-copy`}>
@@ -38,6 +36,7 @@ const colorMode=getColorMode()
       }
         `}</style>
       <Suspense fallback={<div>Loading...</div>}>
+      <Google />
         <Providers palette={palette} colorMode={colorMode} >
         {children}
         </Providers>
