@@ -28,9 +28,10 @@ const LoginForm = () => {
       callbackUrl: `${window.location.origin}/administration`
     })
     enqueueSnackbar(res?.error ? 'Credenciales incorrectas' : 'Sesion iniciada', { variant: res?.ok ? 'success' : 'warning' })
+    console.log(res,'RES LOGIN')
     if (res?.ok) {
       setTimeout(() => {
-        router.refresh()
+        router.push(res?.url)
       }, 500);
     }
   }

@@ -23,6 +23,10 @@ export async function POST(req) {
 
         if(!emailValidation){
             let Password = await hashPassword(body?.Password)
+            const defaultImage=[{asset_id:'',url:'',extension:'webp',resource_type:'image',size:0}]
+            if(!body?.Image){
+                body.Image=defaultImage
+            }
             let newUser = await new UserModel({ ...body, Password })
             await newUser.save()
             return nextResponseCreator(200, 'Usuario creado')
@@ -38,7 +42,6 @@ export async function POST(req) {
                 instance:'signup',
                 expiration:new Date(Date.now() + 48 * 60 * 60 * 1000)
             })
-            console.log(token,'TOKEN')
             await enviar_token_registro(body.Email,token.token)
             
             return nextResponseCreator(200, 'Invitación de usuario enviada por mail')

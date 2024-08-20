@@ -122,6 +122,15 @@ export const users = [
         Name: "SuperAdmin",
         Email: "super@admin.com",
         Password: "$2b$10$tpif2RM4McM93Upyo9OpAOQJdTgcz.DlLsHHjT5o0OVPfAr2kfkOi",
-        Role: "SUPERADMIN_ROLE"
+        Role: "SUPERADMIN_ROLE",
+        Image:[
+            {
+                asset_id:'',
+                url:'',
+                extension:'webp',
+                resource_type:'image',
+                size:0
+            }
+        ]
     }
 ]
