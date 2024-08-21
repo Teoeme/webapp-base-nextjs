@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import UserModal from '../configuration/User/UserModal'
+import { adminLinks } from '@/app/configuraciones'
 
 const AdminNavbar = ({basicLinks}) => {
     const [userModal, setUserModal] = useState({Open:false,Mode:"Edit",Title:'Editar usuario'});
@@ -33,16 +34,7 @@ const AdminNavbar = ({basicLinks}) => {
 
     const links=[
         ...(basicLinks || []),
-        {
-            label:"Administración",
-            href:"/administration",
-            onlySA:false,
-        },
-        {
-            label:"Configuración",
-            href:"/administration/configuration",
-            onlySA:true,
-        },
+        ...(adminLinks || [])
     ]
 
     return (
