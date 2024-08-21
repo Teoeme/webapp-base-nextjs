@@ -1,6 +1,5 @@
 'use client'
-import React, { useState } from 'react'
-import Cookies from 'js-cookie'
+import React, { useEffect, useState } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import { Brightness4Outlined, Brightness5Outlined, Close } from '@mui/icons-material'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
@@ -8,10 +7,17 @@ import useColorMode from '../../hooks/useColorMode'
 
 const ColorModeSwitch = () => {
     const { setColorMode,colorMode,isAutoMode } = useColorMode()
+    const [selector, setSelector] = useState(colorMode);
+    
+    useEffect(() => {
+        const current=(isAutoMode ? 'auto' : colorMode)
+        setSelector(current)
+    }, [colorMode,isAutoMode]);
 
     const modeTree = {
         light: 'dark',
-        dark: isAutoMode ? 'light' :'auto',
+        dark: 'auto',
+        auto:'light'
     }
 
     const TooltipTree={
@@ -20,7 +26,7 @@ const ColorModeSwitch = () => {
     }
 
     const handleChangeColorMode = () => {
-        setColorMode(modeTree[colorMode])
+        setColorMode(modeTree[selector])
     }
 
     return (

@@ -26,13 +26,11 @@ const UserNavbar = ({basicLinks}) => {
         logoimage()
     }, [colorMode]);
 
-
-
     return (
         <>
-            <nav className=' w-screen bg-background h-[6vh] min-h-[60px] flex justify-between'>
+            <nav className=' w-screen bg-background h-[6vh] min-h-[60px] flex justify-between px-2'>
                 <div className='h-full flex items-center justify-between  flex-1'>
-                    <Image src={`/uploads/${src}`} width={300} height={300} className=' w-auto h-auto max-h-full max-w-[15vw] p-2' onClick={()=>router.push('/')} />
+                    <Image src={`/uploads/${src}`} width={300} height={300} className=' w-auto h-auto max-h-full max-w-[15vw] p-2 cursor-pointer' onClick={()=>router.push('/')} />
                     <div className=' flex gap-6 px-4'>
                         {basicLinks?.map((el,idx)=>{
                             const isSelected=pathname===el.href
