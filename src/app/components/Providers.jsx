@@ -5,6 +5,8 @@ import React from 'react'
 import { ConfirmProvider } from 'material-ui-confirm';
 import { SnackbarProvider } from 'notistack';
 import useColorMode from '../hooks/useColorMode';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store';
 
 
 const Providers = ({children,palette,colorMode}) => {
@@ -56,12 +58,14 @@ theme=createTheme({
 
   return (
     <SessionProvider>
+      <Provider store={store}>
       <ThemeProvider theme={theme}>
       <ConfirmProvider>
       <SnackbarProvider  anchorOrigin={{horizontal:'left',vertical:'top'}} autoHideDuration={3500}/>
         {children}
       </ConfirmProvider>
       </ThemeProvider>
+      </Provider>
     </SessionProvider>
   )
 }
