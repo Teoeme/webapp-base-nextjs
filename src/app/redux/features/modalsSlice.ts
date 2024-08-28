@@ -31,6 +31,9 @@ const modalsSlice= createSlice({
             if (state[modalName]) {
               const currentData = state[modalName].data;
               state[modalName].data = typeof updater === 'function' ? updater(currentData) : updater;
+            }else{
+              state[modalName] = typeof updater === 'function' ? updater({data:{}}) : {data:updater};
+
             }
           },
       

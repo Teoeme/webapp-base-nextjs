@@ -39,7 +39,7 @@ const AdminNavbar = ({basicLinks}) => {
 
     return (
         <>
-            <nav className=' w-screen bg-background h-[6vh] min-h-[60px] flex justify-between'>
+            <nav className='hidden w-screen bg-background h-[6vh] min-h-[60px] md:flex justify-between'>
                 <div className='h-full flex items-center justify-between  flex-1'>
                     <Image src={`/uploads/${src}`} width={300} height={300} className=' w-auto h-auto max-h-full max-w-[15vw] p-2' />
                     <div className=' flex gap-6 px-4'>

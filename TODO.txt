@@ -1,0 +1,3 @@
+## En windows al subir una imagen el sistema de archivos toma la barra / al reves --> \ (Contemplar que siempre sea '/')
+
+##Si la sesion esta iniciada y uno intenta hacer login, no se redirecciona, solo se refresca a la pagina

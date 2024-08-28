@@ -3,15 +3,25 @@ import React, { useRef } from 'react'
 import { generateVideoThumbnail } from '../../hooks/utils'
 import Image from 'next/image'
 import { IconButton } from '@mui/material'
-import { AutorenewOutlined, ChangeCircle, ChangeCircleOutlined, Close } from '@mui/icons-material'
+import { AddCircleOutline, AutorenewOutlined, Close } from '@mui/icons-material'
 
-const ImageConfiguration = ({ value, label, multiple = false, imageName, onChange,name,imageClassName ,imagesContainer}) => {
+interface ImageConfigurationProps{
+  value:any,
+  label:string,
+  multiple?:boolean,
+  imageName?:string,
+  onChange:Function,
+  name:string,
+  imageClassName?:string,
+  imagesContainer?:string
+}
+const ImageConfiguration = ({ value, label, multiple = false, imageName, onChange,name,imageClassName ,imagesContainer}:ImageConfigurationProps) => {
   const inputRef = useRef(null)
 
   const handleChangeImages = async (e) => {
     const files = Array.from(e.target.files);
 
-    const thumbnailsPromises = files.map(async (file) => {
+    const thumbnailsPromises = files.map(async (file:any) => {
       let url;
       const extension = file.type.split('/')?.[1]
       if (file.type.startsWith('video')) {
@@ -31,10 +41,13 @@ const ImageConfiguration = ({ value, label, multiple = false, imageName, onChang
       onChange({ target: { value: [...(value || []), ...newImages],name } })
     }
   }
-
   return (
     <div className='w-max'>
-      <div className={`bg-zinc-900/20 w-max rounded ${imagesContainer}`}>
+      <div className={`bg-zinc-900/20 w-max rounded min-w-20 min-h-20 relative ${imagesContainer}`}>
+      {(!value || value?.length === 0) && <IconButton draggable={false} className='!absolute right-1/2 translate-x-1/2 -translate-y-1/2 top-1/2 !z-50  ' size='small' onClick={() => {
+                inputRef.current.click()
+              }}><AddCircleOutline fontSize='large' /></IconButton>}
+
         {value?.map((el, idx) => {
           const url = el?.isNew ? el.url : `/uploads/${el.url}`
           return (

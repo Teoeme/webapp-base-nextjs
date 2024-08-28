@@ -1,7 +1,8 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 
 const useFileStorage = () => {
-
+const [loading, setLoading] = useState(false);
     /**
      *  Subir archivos al localstorage
      *
@@ -18,6 +19,8 @@ const useFileStorage = () => {
             const asset = assets[i];
             assetsFiles.push(asset.file)
             formData.append('images', asset.file)
+            formData.append(`cover`, asset?.cover === true);
+
             assetsNames.push(asset?.name)
         }
 
@@ -54,15 +57,17 @@ const useFileStorage = () => {
     }
 
     async function updateImages(images, folder) {
+        setLoading(true)
         if(!images?.length>0){
+            setLoading(false)
+            console.log('No hay imagenes')
+            return 
             throw new Error("Debe enviar al menos 1 imágen")
         }
         if(!folder){
+            setLoading(false)
             throw new Error("Debe especificar la carpeta donde actualizar las imágenes")
         }
-
-        console.log('UPDATE IMAGES', images,folder)
-
 
         let imagesToAdd = []
         let imagesToDelete = []
@@ -72,7 +77,7 @@ const useFileStorage = () => {
                 imagesToDelete.push(img)
             } else {
                 if (img?.isNew) {
-                    imagesToAdd.push({ file: img.file, name: img?.name })
+                    imagesToAdd.push({ file: img.file, name: img?.name,cover:img?.cover })
                 }
             }
         }
@@ -80,16 +85,16 @@ const useFileStorage = () => {
         const deleteRes = await deleteAsset(imagesToDelete, folder)
 
         let originalImages = images?.filter(el => !el.delete && !el.isNew)
-
         const res = await uploadAsset(imagesToAdd, folder)
         const uploadedImages = res?.data
-
-        const newImagesArray = originalImages.concat(uploadedImages.pop())
+        
+        const newImagesArray = originalImages.concat(uploadedImages?.length>0 ? uploadedImages : [])
+        setLoading(false)
         return newImagesArray
     }
 
 
-return { uploadAsset, deleteAsset,updateImages }
+return { uploadAsset, deleteAsset,updateImages,loading }
 }
 
 export default useFileStorage

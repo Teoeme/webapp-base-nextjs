@@ -1,87 +1,104 @@
 'use client'
-import { Autocomplete, Popper, TextField, createFilterOptions } from '@mui/material';
+import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import React from 'react'
+import { gridPosition } from './customForm/CustomForm';
 
-interface OptionType{
-    value:any,
-    label?:string,
-    isNew?:boolean
+interface OptionType {
+    value: any,
+    label?: string,
+    isNew?: boolean,
+    _id?: string
 }
 interface GenericAutocompletePropsBase {
     options: OptionType[];
     label: string;
-    handleAddNewValue: (newValue: any) => void;
+    handleAddNewValue?: (newValue: any) => void;
     className?: string;
-  }
-  
-  interface GenericAutocompletePropsMultiple extends GenericAutocompletePropsBase {
+    name: string,
+    optionLabel?: string,
+    valueLabel?: string,
+    grid?: gridPosition,
+    allowNewValue?: boolean
+}
+
+interface GenericAutocompletePropsMultiple extends GenericAutocompletePropsBase {
     value: OptionType[];
-    setValue: (value: OptionType[] | ((prev: OptionType[]) => OptionType[])) => void;
+    onChange: (e: Object) => void;
     multiple: true;
-  }
-  
-  interface GenericAutocompletePropsSingle extends GenericAutocompletePropsBase {
+}
+
+interface GenericAutocompletePropsSingle extends GenericAutocompletePropsBase {
     value: OptionType;
-    setValue: (value: OptionType | ((prev: OptionType) => OptionType)) => void;
+    onChange: (e: Object) => void;
     multiple: false;
-  }
-  
-  type GenericAutocompleteProps = GenericAutocompletePropsMultiple | GenericAutocompletePropsSingle;
-  
-const GenericAutocomplete = ({ value, setValue,options,label,handleAddNewValue,className,multiple }:GenericAutocompleteProps) => {
+}
+
+type GenericAutocompleteProps = GenericAutocompletePropsMultiple | GenericAutocompletePropsSingle;
+
+const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddNewValue, className, multiple = false, optionLabel = 'label', grid, allowNewValue = true, valueLabel = 'value' }: GenericAutocompleteProps) => {
     const filter = createFilterOptions<OptionType>();
+    // console.log(options, value, valueLabel, multiple, optionLabel)
 
     return (
         <Autocomplete
-            onChange={(event, newValue:OptionType|OptionType[]) => {
+            onChange={(event, newValue: OptionType | OptionType[]) => {
                 if (Array.isArray(newValue)) {
                     // Caso multiple=true
                     const lastValue = newValue[newValue.length - 1];
                     if (lastValue?.isNew) {
                         handleAddNewValue(lastValue);
                     } else {
-                        setValue(newValue);
+                        onChange({ target: { value: newValue, name } });
+
                     }
                 } else {
                     // Caso multiple=false
                     if (newValue?.isNew) {
                         handleAddNewValue(newValue);
                     } else {
-                        setValue(newValue);
+                        console.log('Seleccionado', newValue?.[valueLabel])
+                        onChange({ target: { value: newValue?.[valueLabel], name } });
                     }
                 }
             }}
-            filterOptions={(options:OptionType[], params) => {
+            filterOptions={(options: OptionType[], params) => {
                 const filtered = filter(options, params);
                 const { inputValue } = params;
-                const isExisting = options?.some((opt:OptionType) => inputValue === opt?.value);
-                
-                console.log(isExisting,'Exist',inputValue)
-                
-                if (inputValue !== '' && !isExisting) {
-                    filtered.push({ value:inputValue, label:`Agregar nuevo ${inputValue}`,isNew:true });
+                const isExisting = options?.some((opt: OptionType) => inputValue === opt?.value);
+
+                if (allowNewValue && inputValue !== '' && !isExisting) {
+                    filtered.push({ value: inputValue, [optionLabel]: `Agregar nuevo ${inputValue}`, isNew: true });
                 }
-                
+
                 return filtered;
             }}
-            multiple={multiple}
-            fullWidth
+            autoSelect
             clearOnBlur
-            disablePortal
-            selectOnFocus
+            value={value}
+            autoHighlight
             options={options}
             handleHomeEndKeys
-            value={value || []}
+            multiple={multiple}
             className={className}
-            getOptionLabel={(opt:OptionType) => opt.label}
-            isOptionEqualToValue={(opt:OptionType, val:OptionType) => opt.value === val.value}
-            renderOption={(props, option:OptionType) =><li {...props}>{option?.label}</li>}
+            style={{
+                gridColumnStart: grid?.colStart,
+                gridColumnEnd: grid?.colEnd,
+                gridRowStart: grid?.rowStart,
+                gridRowEnd: grid?.rowEnd,
+            }}
+            getOptionLabel={(opt: OptionType) => {
+                return opt?.[optionLabel] || opt
+            }}
+            isOptionEqualToValue={(opt: OptionType, val: any) => {
+                return multiple ? opt?._id === val?._id : opt?.[valueLabel] === val
+            }}
+            renderOption={(props, option: OptionType) => <li {...props}>{option?.[optionLabel]}</li>}
             renderInput={(params) => {
                 return (
                     <TextField {...params} label={label} fullWidth />
                 )
-            }} 
-            />
+            }}
+        />
     )
 }
 

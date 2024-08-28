@@ -19,6 +19,14 @@ const useModal = (modalName:string) => {
         dispatch(setData({modalName,updater}))
     }
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        updateData({
+            ...modalState?.['data'],
+            [name]: value,
+          });
+      };
+
     
 
     return {
@@ -26,7 +34,8 @@ const useModal = (modalName:string) => {
         data:modalState.data,
         open,
         close,
-        setData:updateData
+        setData:updateData,
+        handleChange
   }
 }
 

@@ -7,6 +7,8 @@ import { SnackbarProvider } from 'notistack';
 import useColorMode from '../hooks/useColorMode';
 import { Provider } from 'react-redux';
 import { store } from '../redux/store';
+import { esES } from '@mui/x-data-grid/locales';
+import { esES as coreEsEs } from '@mui/material/locale';
 
 
 const Providers = ({children,palette,colorMode}) => {
@@ -50,10 +52,12 @@ theme=createTheme({
       fontFamily:[
         'var(--font-main)','var(--font-secondary)'
       ].join(','),
-      fontSize:12
-    }
+      fontSize:13,
+
+    },
     
-  })
+    
+  },esES,coreEsEs)
 }
 
   return (

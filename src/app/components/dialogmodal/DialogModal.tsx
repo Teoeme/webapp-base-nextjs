@@ -3,17 +3,20 @@
 import useModal from '@/app/hooks/useModal';
 import React, { ReactNode, useEffect, useRef } from 'react';
 import './dialogmodal.css'
-import { IconButton } from '@mui/material';
+import { Button, Dialog, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 
 interface DialogModalProps {
   modalName: string;
   children: ReactNode;
-  className?: string;  // Para permitir personalización de estilos
-  cleanOnClose:boolean
+  className?: string;
+  cleanOnClose:boolean,
+  maxWidth?:'sm' | 'xs' | 'md' | 'lg' | 'xl' | false,
+  fullScreen?:boolean
 }
 
-const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, className,cleanOnClose=false }) => {
+const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, className,cleanOnClose=false,maxWidth='xs',fullScreen=false }) => {
   const { isOpen, close,data } = useModal(modalName);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -27,21 +30,28 @@ const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, classNam
   }, [isOpen]);
 
   return (
-    <dialog
-      ref={dialogRef}
-      key={`${modalName}-modal`}
-      className={`text-copy px-2 overflow-hidden rounded shadow ${className}`}
-      onClose={(e)=>{close(cleanOnClose); e.stopPropagation()}}
-      onCancel={(e)=>{close(cleanOnClose); e.stopPropagation()}} 
+    <>
+      {isOpen && (
+        <div className="custom-backdrop" onClick={(e)=>{close(cleanOnClose); e.stopPropagation()}}></div>
+      )}
+    <Dialog
+    maxWidth={maxWidth}
+    fullScreen={fullScreen}
+    open={isOpen}
+    key={`${modalName}-modal`}
+    className={`text-copy p-3 overflow-hidden rounded shadow  ${className}`}
+    PaperProps={{className:' bg-foreground', style:{backgroundImage:'none'}}}
+    onClose={(e)=>{close(cleanOnClose)}}
     >
-        <div className=' w-full py-2 flex justify-between items-center text-xs uppercase text-copyLighter '>
+        <div className=' w-full p-2 flex justify-between items-center text-xs uppercase text-copyLighter '>
             <p>{data?.Title}</p>
             <IconButton onClick={(e)=>{close(cleanOnClose); e.stopPropagation()}} size='small'><Close fontSize='small' /></IconButton>
         </div>
-        <div className=' w-max p-2'>
+        <div className=' w-full p-2'>
       {children}
         </div>
-    </dialog>
+    </Dialog>
+    </>
   );
 };
 

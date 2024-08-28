@@ -7,7 +7,7 @@ const configuracionSchema = new Schema({
   value:{type:Schema.Types.Mixed,required:true},
   description:String,
   protected:{type:Boolean,default:true},
-  type:{type:String,required:true,enum:['string','image','images','number']},
+  type:{type:String,required:true,enum:['string','image','images','number','object']},
   group:String,
   helperText:{type:String}
   

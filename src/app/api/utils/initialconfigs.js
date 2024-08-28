@@ -42,7 +42,7 @@ export const configurations = [
     },
     {
         name: "logoimage",
-        value: {},
+        value: [{}],
         description: "Logotipo del negocio version modo claro",
         type: 'image',
         protected: false,
@@ -52,7 +52,7 @@ export const configurations = [
     },
     { 
         name: "logoimagedark",
-        value: {},
+        value: [{}],
         description: "Logotipo del negocio version modo oscuro",
         type: 'image',
         protected: false,
@@ -124,8 +124,8 @@ export const users = [
         Role: "SUPERADMIN_ROLE",
         Image:[
             {
-                asset_id:'',
-                url:'',
+                asset_id:'0',
+                url:'/',
                 extension:'webp',
                 resource_type:'image',
                 size:0
