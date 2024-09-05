@@ -1,33 +1,40 @@
 'use client'
-import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+import { Autocomplete, AutocompleteProps, StandardTextFieldProps, TextField, createFilterOptions } from '@mui/material';
 import React from 'react'
 import { gridPosition } from './customForm/CustomForm';
 
-interface OptionType {
+export interface OptionType {
     value: any,
     label?: string,
     isNew?: boolean,
     _id?: string
 }
-interface GenericAutocompletePropsBase {
+
+interface GenericAutocompletePropsBase<T> {
+    autocompleteprops?: AutocompleteProps<T, boolean | undefined, boolean | undefined, boolean | undefined>,
     options: OptionType[];
-    label: string;
+    label?: string;
     handleAddNewValue?: (newValue: any) => void;
     className?: string;
     name: string,
     optionLabel?: string,
     valueLabel?: string,
     grid?: gridPosition,
-    allowNewValue?: boolean
+    allowNewValue?: boolean,
+    Multiple?: boolean | undefined,
+    DisableClearable?: boolean | undefined,
+    FreeSolo?: boolean | undefined,
+    ChipComponent?: React.ElementType,
+    renderInputProps?: StandardTextFieldProps
 }
 
-interface GenericAutocompletePropsMultiple extends GenericAutocompletePropsBase {
+interface GenericAutocompletePropsMultiple extends GenericAutocompletePropsBase<OptionType[]> {
     value: OptionType[];
     onChange: (e: Object) => void;
     multiple: true;
 }
 
-interface GenericAutocompletePropsSingle extends GenericAutocompletePropsBase {
+interface GenericAutocompletePropsSingle extends GenericAutocompletePropsBase<OptionType> {
     value: OptionType;
     onChange: (e: Object) => void;
     multiple: false;
@@ -35,7 +42,7 @@ interface GenericAutocompletePropsSingle extends GenericAutocompletePropsBase {
 
 type GenericAutocompleteProps = GenericAutocompletePropsMultiple | GenericAutocompletePropsSingle;
 
-const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddNewValue, className, multiple = false, optionLabel = 'label', grid, allowNewValue = true, valueLabel = 'value' }: GenericAutocompleteProps) => {
+const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddNewValue, className, multiple = false, optionLabel = 'label', grid, allowNewValue = true, valueLabel = 'value',autocompleteprops,renderInputProps,...rest }: GenericAutocompleteProps) => {
     const filter = createFilterOptions<OptionType>();
     // console.log(options, value, valueLabel, multiple, optionLabel)
 
@@ -56,8 +63,8 @@ const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddN
                     if (newValue?.isNew) {
                         handleAddNewValue(newValue);
                     } else {
-                        console.log('Seleccionado', newValue?.[valueLabel])
-                        onChange({ target: { value: newValue?.[valueLabel], name } });
+                        console.log('Seleccionado', newValue?.[valueLabel] || newValue)
+                        onChange({ target: { value: newValue?.[valueLabel] || newValue, name } });
                     }
                 }
             }}
@@ -77,7 +84,6 @@ const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddN
             value={value}
             autoHighlight
             options={options}
-            handleHomeEndKeys
             multiple={multiple}
             className={className}
             style={{
@@ -92,12 +98,18 @@ const GenericAutocomplete = ({ value, onChange, options, label, name, handleAddN
             isOptionEqualToValue={(opt: OptionType, val: any) => {
                 return multiple ? opt?._id === val?._id : opt?.[valueLabel] === val
             }}
-            renderOption={(props, option: OptionType) => <li {...props}>{option?.[optionLabel]}</li>}
+            renderOption={(props, option: OptionType) => <li {...props}>{option?.[optionLabel]||option}</li>}
             renderInput={(params) => {
                 return (
-                    <TextField {...params} label={label} fullWidth />
+                    <TextField
+                    {...params}
+                    {...renderInputProps} 
+                    InputProps={{...params.InputProps,...renderInputProps?.InputProps}} 
+                    label={label} fullWidth />
                 )
             }}
+        {...autocompleteprops}
+            {...rest}
         />
     )
 }

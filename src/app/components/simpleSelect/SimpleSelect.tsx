@@ -8,7 +8,7 @@ interface SimpleSelectComponent{
     onChange:Function,
     label?:string,
     name:string,
-    className:string
+    className?:string
 
 }
 

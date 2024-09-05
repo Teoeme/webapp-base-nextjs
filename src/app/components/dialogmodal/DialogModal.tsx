@@ -13,10 +13,11 @@ interface DialogModalProps {
   className?: string;
   cleanOnClose:boolean,
   maxWidth?:'sm' | 'xs' | 'md' | 'lg' | 'xl' | false,
-  fullScreen?:boolean
+  fullScreen?:boolean,
+  fullWidth?:boolean,
 }
 
-const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, className,cleanOnClose=false,maxWidth='xs',fullScreen=false }) => {
+const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, className,cleanOnClose=false,maxWidth='xs',fullScreen=false,fullWidth=false }) => {
   const { isOpen, close,data } = useModal(modalName);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -36,6 +37,7 @@ const DialogModal: React.FC<DialogModalProps> = ({ modalName, children, classNam
       )}
     <Dialog
     maxWidth={maxWidth}
+    fullWidth={fullWidth}
     fullScreen={fullScreen}
     open={isOpen}
     key={`${modalName}-modal`}

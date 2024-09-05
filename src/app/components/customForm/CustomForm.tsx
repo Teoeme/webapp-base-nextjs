@@ -23,7 +23,7 @@ export interface field {
   label: string,
   value: object | string | number,
   onChange: (e: any) => any,
-  type?: 'text' | 'number'| 'select',
+  type?: 'text' | 'number'| 'select' | 'date',
   component?: ReactElement,
   error?: boolean,
   helperText?: string,
@@ -110,7 +110,24 @@ const CustomField = ({ field }: { field: field }) => {
           }}
         />
       )
-
+      case 'date':
+        return (
+          <TextField
+            value={field.value || ''}
+            onChange={field.onChange}
+            name={field.name}
+            label={field.label}
+            className={field.className}
+            size={field.size}
+            type={field.type}
+            style={{
+              gridColumnStart: field.grid?.colStart,
+              gridColumnEnd: field.grid?.colEnd,
+              gridRowStart: field.grid?.rowStart,
+              gridRowEnd: field.grid?.rowEnd,
+            }}
+          />
+        )
 case 'select':
   return(<SimpleSelect 
   value={field.value}

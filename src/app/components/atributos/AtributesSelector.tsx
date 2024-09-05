@@ -94,7 +94,7 @@ const AtributesSelector = ({ value, onChange, name, className, variant }: Atribu
 
                         <div className={`w-full flex gap-1 `}>
                             
-                            <Autocomplete className='w-1/2'
+                            <Autocomplete className='md:w-1/2 w-2/3'
                                 size='small'
                                 options={attributeList?.filter(e => {
                                     return !value?.some(val => val._id === e._id)
@@ -121,10 +121,10 @@ const AtributesSelector = ({ value, onChange, name, className, variant }: Atribu
                                         {opt?.Icon?.[0] && <AtributeIcon className='size-5'  icon={opt?.Icon?.[0]}/>}
                                         <p>{key}</p>
                                         </span>
-                                        <div>
+                                     {opt?.Value!=='new' &&   <div>
                                             <IconButton onClick={() => open({ ...opt, Mode: 'Edit', Title: "Editar atributo" })} size='small' color='warning'><Edit fontSize='small' className='text-sm' /></IconButton>
                                             <IconButton onClick={() => handleDelete(opt)} size='small' color='error'><Delete fontSize='small' className='text-sm' /></IconButton>
-                                        </div>
+                                        </div>}
                                     </li>
                                 }}
                                 filterOptions={(options, params) => {
@@ -137,12 +137,12 @@ const AtributesSelector = ({ value, onChange, name, className, variant }: Atribu
                                     return filtered;
                                 }}
                                 value={el.Name}
-
+                                
                             />
                             {(el?.Options?.length > 0 || el?.Value) &&
                                 <Autocomplete
                                     size='small'
-                                    className='w-1/2'
+                                    className=' md:w-1/2 w-1/3'
                                     options={valueOptions || []}
                                     renderInput={(params) => <TextField variant={variant} {...params} />}
                                     value={el.Value}
@@ -170,7 +170,7 @@ const AtributesSelector = ({ value, onChange, name, className, variant }: Atribu
 
                                         return filtered;
                                     }}
-
+                                    disablePortal
                                 />
                             }
 

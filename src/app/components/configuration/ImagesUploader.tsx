@@ -1,7 +1,7 @@
 import { generateVideoThumbnail } from '@/app/hooks/utils'
 import { IImage, IProductImage } from '@/app/models/marca'
 import { AddCircleOutline, CheckCircleOutline, Close, RadioButtonUnchecked } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { IconButton, useMediaQuery, useTheme } from '@mui/material'
 import { Reorder } from 'framer-motion'
 import Image from 'next/image'
 import React, { useRef } from 'react'
@@ -18,6 +18,8 @@ interface ImagesUploaderProps {
 
 
 const ImagesUploader = ({ value, onChange, name, label, className, imgClassName }: ImagesUploaderProps) => {
+    const theme=useTheme()
+    const isMobile=useMediaQuery(theme.breakpoints.down('md'))
 
     const inputRef = useRef(null)
 
@@ -41,7 +43,7 @@ const ImagesUploader = ({ value, onChange, name, label, className, imgClassName 
         onChange({ target: { name, value: [...(value || []), ...newImages] } })
     }
     return (
-        <div className={`w-full  flex border-zinc-500/50 border p-2 rounded relative overflow-visible ${className}`}>
+        <div className={`w-full  flex flex-col md:flex-row items-center md:items-start border-zinc-500/50 border p-2 rounded relative overflow-visible ${className}`}>
             <p className=' bg-foreground absolute -top-2 text-xs px-2 left-2 text-copyLight'>{label}</p>
 
             <div className={`grid place-content-center bg-background/30 mr-2 rounded min-h-32 min-w-20 ${imgClassName}`}>
@@ -49,7 +51,7 @@ const ImagesUploader = ({ value, onChange, name, label, className, imgClassName 
                 <IconButton onClick={() => inputRef.current.click()}><AddCircleOutline fontSize='large' /></IconButton>
             </div>
 
-            <Reorder.Group values={value || []} onReorder={(nv) => { onChange({ target: { name, value: nv } }) }} className='flex gap-2 max-w-full items-center ' axis='x'>
+            <Reorder.Group values={value || []} onReorder={(nv) => { onChange({ target: { name, value: nv } }) }} className='flex flex-col md:flex-row gap-2 max-w-full items-center ' axis={isMobile ?'y' :'x'}>
                 {value?.map((img, idx) => {
                     const isCover = img?.cover
 
@@ -78,7 +80,7 @@ const ImagesUploader = ({ value, onChange, name, label, className, imgClassName 
                     if (img?.delete) return
 
 
-                    return (<Reorder.Item value={img} key={`${img?.file?.name || img?.asset_id}`} className={` relative ${imgClassName}`}>
+                    return (<Reorder.Item value={img} key={`${img?.file?.name || img?.asset_id}`} className={` relative ${imgClassName}`} >
                         <IconButton draggable={false} className='!absolute right-2 top-1 !z-50 bg-background/60' size='small' onClick={handleRemove}><Close fontSize='small' /></IconButton>
                         <IconButton draggable={false} className='!absolute right-12 top-1 !z-50 text-xs flex gap-1 hover:bg-background/80 bg-background/60 rounded-md' size='small' onClick={handleChangeCover}>{!img?.cover ? <RadioButtonUnchecked fontSize='small' /> : <CheckCircleOutline fontSize='small' />}
                             Portada

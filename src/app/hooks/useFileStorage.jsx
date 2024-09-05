@@ -10,8 +10,9 @@ const [loading, setLoading] = useState(false);
      * @param {String} [assets.name] - Nombre del archivo
      * @param {File} [assets.file] - Nombre del archivo
      * @param {String} folder = Carpeta donde se subirá
+     * @param {Boolean} isPublic = Indica si el archivo es de acceso publico
      */
-    const uploadAsset = async (assets, folder) => {
+    const uploadAsset = async (assets, folder,isPublic=true) => {
         const formData = new FormData()
         let assetsFiles = []
         let assetsNames = []
@@ -25,6 +26,9 @@ const [loading, setLoading] = useState(false);
         }
 
         formData.append('names', assetsNames)
+        if(!isPublic){
+            formData.append('isPublic',false)
+        }
 
         let res = await fetch(`/api/media/${folder}`, {
             method: "POST",
@@ -41,22 +45,23 @@ const [loading, setLoading] = useState(false);
   * @param {String} [assets.asset_id] - Nombre del archivo
   * @param {String} [assets.extension] - Nombre del archivo
   * @param {String} folder = Carpeta donde se encuentran los archivos
+  * @param {Boolean} isPublic = Indica si el archivo es de acceso publico
   */
-    const deleteAsset = async (assets, folder) => {
+    const deleteAsset = async (assets, folder,isPublic=true) => {
         let files = []
         for (let i = 0; i < assets.length; i++) {
             const asset = assets[i];
-            files.push(`${asset?.asset_id}.${asset?.extension}`)
+            files.push(`${asset?.asset_id}.${asset?.extension}`,asset?.asset_id)
         }
 
         let res = await fetch(`/api/media/${folder}`, {
             method: "DELETE",
-            body: JSON.stringify({ files })
+            body: JSON.stringify({ files,isPublic })
         }).then(async res => await res.json())
         return res
     }
 
-    async function updateImages(images, folder) {
+    async function updateImages(images, folder,isPublic=true) {
         setLoading(true)
         if(!images?.length>0){
             setLoading(false)
@@ -82,10 +87,10 @@ const [loading, setLoading] = useState(false);
             }
         }
 
-        const deleteRes = await deleteAsset(imagesToDelete, folder)
+        const deleteRes = await deleteAsset(imagesToDelete, folder,isPublic)
 
         let originalImages = images?.filter(el => !el.delete && !el.isNew)
-        const res = await uploadAsset(imagesToAdd, folder)
+        const res = await uploadAsset(imagesToAdd, folder,isPublic)
         const uploadedImages = res?.data
         
         const newImagesArray = originalImages.concat(uploadedImages?.length>0 ? uploadedImages : [])
@@ -93,8 +98,20 @@ const [loading, setLoading] = useState(false);
         return newImagesArray
     }
 
+    async function getFile(url,isPrivate=false){
+        if(isPrivate){
+            const res=await fetch(`/api/privatemedia/${url}`)
+            .then(async res=>{
+                const data=await res.json()
+                if(res?.ok){
+                    return data
+                }
+            })
+            return res
+        }
 
-return { uploadAsset, deleteAsset,updateImages,loading }
+    }
+return { uploadAsset, deleteAsset,updateImages,loading,getFile }
 }
 
 export default useFileStorage
